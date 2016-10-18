@@ -7,22 +7,23 @@
 			 Also script wont run if you set it to hardcore, this is so you can keep group settings and some leniency
 	TODO: ;;;
 */
-if (!isDedicated) then {
-
-    waitUntil {!isNull (findDisplay 46)};
-
-    if ((difficultyOption "thirdPersonView")==1) then
-    {
-        while {true} do {
-
-            waitUntil {cameraView == "EXTERNAL" || cameraView == "GROUP"};
-
-            if (ExileClientPlayerIsInCombat) then {
-                player switchCamera "INTERNAL";
-            };
-            sleep 0.1;
-
-         };
-    };
-
+if (difficultyEnabled "3rdPersonView") then {
+	while {true} do {
+		waitUntil {cameraView == "EXTERNAL" || cameraView == "GROUP"};
+		sleep 0.1;
+		if  ((vehicle player) == player) then {
+				if(ExileClientPlayerIsInCombat) then {
+					player switchCamera "INTERNAL";
+				} else {
+					if(!(ExileClientIsInConstructionMode)) then {
+						sleep 3;
+						player switchCamera "INTERNAL";
+					};
+				};
+		}; 
+		if (((vehicle player) != player) && (ExileClientPlayerIsInCombat)) then {
+			(vehicle player) switchCamera "Internal";
+		};
+		sleep 0.1;
+	};
 };
